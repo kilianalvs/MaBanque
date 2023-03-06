@@ -75,7 +75,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCredit() {
+    public void testCompteCredit() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.credit(100);
@@ -89,9 +89,8 @@ public class CompteBancaireTest {
     public void testCompteCreditInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        CompteRenduOperation compteRendu = compte.credit(0);
-
-        fail();
+        
+        assertThrows(CreditException.class, ()-> compte.credit(0));
 
     }
 
@@ -99,9 +98,8 @@ public class CompteBancaireTest {
     public void testCompteCreditInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
-        CompteRenduOperation compteRendu = compte.credit(500);
 
-        fail();
+        assertThrows(CreditException.class, ()-> compte.credit(500));
 
     }
 
@@ -120,9 +118,8 @@ public class CompteBancaireTest {
     public void testCompteDebitInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        CompteRenduOperation compteRendu = compte.debit(0);
 
-        fail();
+        assertThrows(CreditException.class, ()-> compte.debit(0));
 
     }
 
@@ -130,9 +127,8 @@ public class CompteBancaireTest {
     public void testCompteDebitInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
-        CompteRenduOperation compteRendu = compte.debit(500);
 
-        fail();
+        assertThrows(CreditException.class, ()-> compte.debit(500));
 
     }
 
