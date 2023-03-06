@@ -1,8 +1,11 @@
-import exception.CreditException;
-import org.junit.Assert;
-import org.junit.Test;
+package com.esgi.mabanque.MaBanque;
+
+import com.esgi.mabanque.MaBanque.exception.CreditException;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CompteBancaireTest {
 
@@ -12,18 +15,18 @@ public class CompteBancaireTest {
     public void testCompteBancaire() {
 
         CompteBancaire compte = this.myCompte;
-        Assert.assertEquals(compte.getMontant(), 0);
-        Assert.assertNull(compte.getDateHeureDerniereMAJ());
+        assertEquals(compte.getMontant(), 0);
+        assertNull(compte.getDateHeureDerniereMAJ());
 
         compte.setId(1);
-        Assert.assertEquals(compte.getId(), 1);
+        assertEquals(compte.getId(), 1);
 
         compte.setMontant(100);
-        Assert.assertEquals(compte.getMontant(), 100);
+        assertEquals(compte.getMontant(), 100);
 
         LocalDateTime dateHeureDerniereMAJ = LocalDateTime.now();
         compte.setDateHeureDerniereMAJ(dateHeureDerniereMAJ);
-        Assert.assertEquals(compte.getDateHeureDerniereMAJ(), dateHeureDerniereMAJ);
+        assertEquals(compte.getDateHeureDerniereMAJ(), dateHeureDerniereMAJ);
     }
 
     @Test
@@ -32,7 +35,7 @@ public class CompteBancaireTest {
         compte.setMontant(0);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        Assert.assertTrue(compte.estValide());
+        assertTrue(compte.estValide());
     }
 
     @Test
@@ -41,7 +44,7 @@ public class CompteBancaireTest {
         compte.setMontant(1000);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        Assert.assertTrue(compte.estValide());
+        assertTrue(compte.estValide());
     }
 
     @Test
@@ -50,7 +53,7 @@ public class CompteBancaireTest {
         compte.setMontant(500);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        Assert.assertTrue(compte.estValide());
+        assertTrue(compte.estValide());
     }
 
     @Test
@@ -59,7 +62,7 @@ public class CompteBancaireTest {
         compte.setMontant(-1);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        Assert.assertFalse(compte.estValide());
+        assertFalse(compte.estValide());
     }
 
     @Test
@@ -68,21 +71,17 @@ public class CompteBancaireTest {
         compte.setMontant(1001);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        Assert.assertFalse(compte.estValide());
+        assertFalse(compte.estValide());
     }
 
     @Test
     public void testCompteCredit() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        try {
-            CompteRenduOperation compteRendu = compte.credit(100);
-            Assert.assertEquals(compteRendu.getMontantCredite(), 100);
-            Assert.assertEquals(compteRendu.getMontantDebite(), 0);
-            Assert.assertEquals(compteRendu.getNouveauSolde(), 600);
-        }catch (CreditException e) {
-            Assert.fail();
-        }
+        CompteRenduOperation compteRendu = compte.credit(100);
+        assertEquals(compteRendu.getMontantCredite(), 100);
+        assertEquals(compteRendu.getMontantDebite(), 0);
+        assertEquals(compteRendu.getNouveauSolde(), 600);
 
     }
 
@@ -90,13 +89,9 @@ public class CompteBancaireTest {
     public void testCompteCreditInvalide() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        try {
-            CompteRenduOperation compteRendu = compte.credit(0);
+        CompteRenduOperation compteRendu = compte.credit(0);
 
-            Assert.fail();
-        }catch (CreditException e) {
-            Assert.assertEquals(e.getMessage(), "Mauvais montant");
-        }
+        fail();
 
     }
 
@@ -104,13 +99,9 @@ public class CompteBancaireTest {
     public void testCompteCreditInvalideCompte() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
-        try {
-            CompteRenduOperation compteRendu = compte.credit(500);
+        CompteRenduOperation compteRendu = compte.credit(500);
 
-            Assert.fail();
-        }catch (CreditException e) {
-            Assert.assertEquals(e.getMessage(), "Le compte bancaire n'est pas dans un état correct");
-        }
+        fail();
 
     }
 
@@ -118,14 +109,10 @@ public class CompteBancaireTest {
     public void testCompteDebit() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        try {
-            CompteRenduOperation compteRendu = compte.debit(100);
-            Assert.assertEquals(compteRendu.getMontantCredite(), 0);
-            Assert.assertEquals(compteRendu.getMontantDebite(), 100);
-            Assert.assertEquals(compteRendu.getNouveauSolde(), 400);
-        }catch (CreditException e) {
-            Assert.fail();
-        }
+        CompteRenduOperation compteRendu = compte.debit(100);
+        assertEquals(compteRendu.getMontantCredite(), 0);
+        assertEquals(compteRendu.getMontantDebite(), 100);
+        assertEquals(compteRendu.getNouveauSolde(), 400);
 
     }
 
@@ -133,13 +120,9 @@ public class CompteBancaireTest {
     public void testCompteDebitInvalide() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        try {
-            CompteRenduOperation compteRendu = compte.debit(0);
+        CompteRenduOperation compteRendu = compte.debit(0);
 
-            Assert.fail();
-        }catch (CreditException e) {
-            Assert.assertEquals(e.getMessage(), "Mauvais montant");
-        }
+        fail();
 
     }
 
@@ -147,13 +130,9 @@ public class CompteBancaireTest {
     public void testCompteDebitInvalideCompte() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
-        try {
-            CompteRenduOperation compteRendu = compte.debit(500);
+        CompteRenduOperation compteRendu = compte.debit(500);
 
-            Assert.fail();
-        }catch (CreditException e) {
-            Assert.assertEquals(e.getMessage(), "Le compte bancaire n'est pas dans un état correct");
-        }
+        fail();
 
     }
 

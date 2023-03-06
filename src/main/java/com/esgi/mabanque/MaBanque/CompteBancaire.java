@@ -1,6 +1,7 @@
 package com.esgi.mabanque.MaBanque;
 
-import exception.CreditException;
+
+import com.esgi.mabanque.MaBanque.exception.CreditException;
 
 import java.time.LocalDateTime;
 

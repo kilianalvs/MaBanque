@@ -1,9 +1,11 @@
-import org.junit.Assert;
-import org.junit.Test;
+package com.esgi.mabanque.MaBanque;
+
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BanquierTest {
 
@@ -19,11 +21,11 @@ public class BanquierTest {
 
         Banquier banquier = this.myBanquier;
 
-        Assert.assertEquals(banquier.getEmail(), "Dupont@email.com");
-        Assert.assertEquals(banquier.getNom(), "Dupont");
-        Assert.assertEquals(banquier.getPrenom(), "Jean");
-        Assert.assertEquals(banquier.getDateDeNaissance(), LocalDate.of(2001, 8, 1));
-        Assert.assertEquals(banquier.getDateArrivee(), this.dateArrivee);
-        Assert.assertEquals(banquier.getClients(), new ArrayList<Client>());
+        assertEquals(banquier.getEmail(), "Dupont@email.com");
+        assertEquals(banquier.getNom(), "Dupont");
+        assertEquals(banquier.getPrenom(), "Jean");
+        assertEquals(banquier.getDateDeNaissance(), LocalDate.of(2001, 8, 1));
+        assertEquals(banquier.getDateArrivee(), this.dateArrivee);
+        assertEquals(banquier.getClients(), new ArrayList<Client>());
     }
 }
