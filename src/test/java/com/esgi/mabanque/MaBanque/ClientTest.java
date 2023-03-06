@@ -1,9 +1,12 @@
-import exception.GlobalException;
-import org.junit.Assert;
-import org.junit.Test;
+package com.esgi.mabanque.MaBanque;
+
+import com.esgi.mabanque.MaBanque.exception.GlobalException;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientTest {
     private Client myClient = new Client("Dupont@email.com", "Jean", "Dupont",
@@ -15,12 +18,12 @@ public class ClientTest {
 
         Client client = this.myClient;
 
-        Assert.assertEquals(client.getCompteBancaire(), new ArrayList<CompteBancaire>());
-        Assert.assertEquals(client.getEmail(), "Dupont@email.com");
-        Assert.assertEquals(client.getNom(), "Dupont");
-        Assert.assertEquals(client.getPrenom(), "Jean");
-        Assert.assertEquals(client.getDateDeNaissance(), LocalDate.of(2001, 8, 1));
-        Assert.assertFalse(client.isInterditBancaire());
+        assertEquals(client.getCompteBancaire(), new ArrayList<CompteBancaire>());
+        assertEquals(client.getEmail(), "Dupont@email.com");
+        assertEquals(client.getNom(), "Dupont");
+        assertEquals(client.getPrenom(), "Jean");
+        assertEquals(client.getDateDeNaissance(), LocalDate.of(2001, 8, 1));
+        assertFalse(client.isInterditBancaire());
     }
 
     @Test
@@ -32,9 +35,9 @@ public class ClientTest {
         client.setInterditBancaire(false);
 
         try {
-            Assert.assertTrue(client.verifierSiCompteValide(1));
+            assertTrue(client.verifierSiCompteValide(1));
         }catch (GlobalException e){
-            Assert.fail();
+            fail();
         }
     }
 
@@ -47,9 +50,9 @@ public class ClientTest {
         client.setInterditBancaire(true);
 
         try {
-            Assert.assertFalse(client.verifierSiCompteValide(1));
+            assertFalse(client.verifierSiCompteValide(1));
         }catch (GlobalException e){
-            Assert.fail();
+            fail();
         }
     }
 
@@ -62,9 +65,9 @@ public class ClientTest {
         client.setInterditBancaire(false);
 
         try {
-            Assert.assertTrue(client.verifierSiCompteValide(1));
+            assertTrue(client.verifierSiCompteValide(1));
         }catch (GlobalException e){
-            Assert.fail();
+            fail();
         }
     }
 
@@ -79,11 +82,11 @@ public class ClientTest {
         try {
             client.verifierSiCompteValide(2);
 
-            Assert.fail();
+            fail();
         }catch (GlobalException e){
             flag = true;
-            Assert.assertTrue(flag);
-            Assert.assertEquals(e.getMessage(), "Compte non trouvé");
+            assertTrue(flag);
+            assertEquals(e.getMessage(), "Compte non trouvé");
         }
 
     }

@@ -86,7 +86,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCreditInvalide() {
+    public void testCompteCreditInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.credit(0);
@@ -96,7 +96,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCreditInvalideCompte() {
+    public void testCompteCreditInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
         CompteRenduOperation compteRendu = compte.credit(500);
@@ -106,7 +106,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebit() {
+    public void testCompteDebit() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.debit(100);
@@ -117,7 +117,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebitInvalide() {
+    public void testCompteDebitInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.debit(0);
@@ -127,7 +127,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebitInvalideCompte() {
+    public void testCompteDebitInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
         CompteRenduOperation compteRendu = compte.debit(500);
