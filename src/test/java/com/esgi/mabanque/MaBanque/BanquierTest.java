@@ -1,82 +1,29 @@
-package com.esgi.mabanque.MaBanque;
+import org.junit.Assert;
+import org.junit.Test;
 
-import com.esgi.mabanque.MaBanque.exception.CreditException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-public class CompteBancaireTest {
+public class BanquierTest {
 
-    private CompteBancaire compteBancaire;
-
-    @BeforeEach
-    public void setUp() {
-        this.compteBancaire = new CompteBancaire();
-    }
-
-    @Test
-    public void testCreditCompteBancaire() throws CreditException {
-        int montantACrediter = 500;
-        CompteRenduOperation compteRenduOperation = this.compteBancaire.credit(montantACrediter);
-
-        int expectedNouveauSolde = 500;
-        int expectedMontantCredite = 500;
-        int expectedMontantNonCredite = 0;
-
-        Assertions.assertEquals(expectedNouveauSolde, compteRenduOperation.getNouveauSolde());
-        Assertions.assertEquals(expectedMontantCredite, compteRenduOperation.getMontantCredite());
-        Assertions.assertEquals(expectedMontantNonCredite, compteRenduOperation.getMontantNonCredite());
-        Assertions.assertNotNull(compteRenduOperation.getDateHeureOperation());
-    }
+    private LocalDate dateArrivee = LocalDate.now();
+    private Banquier myBanquier = new Banquier("Dupont@email.com", "Jean", "Dupont",
+            LocalDate.of(2001, 8, 1),
+            this.dateArrivee,
+            new ArrayList<Client>()
+    );
 
     @Test
-    public void testDebitCompteBancaire() throws CreditException {
-        int montantACrediter = 500;
-        this.compteBancaire.credit(montantACrediter);
+    public void testBanquier() {
 
-        int montantADebiter = 300;
-        CompteRenduOperation compteRenduOperation = this.compteBancaire.debit(montantADebiter);
+        Banquier banquier = this.myBanquier;
 
-        int expectedNouveauSolde = 200;
-        int expectedMontantDebite = 300;
-        int expectedMontantNonDebite = 0;
-
-        Assertions.assertEquals(expectedNouveauSolde, compteRenduOperation.getNouveauSolde());
-        Assertions.assertEquals(expectedMontantDebite, compteRenduOperation.getMontantDebite());
-        Assertions.assertEquals(expectedMontantNonDebite, compteRenduOperation.getMontantNonDebite());
-        Assertions.assertNotNull(compteRenduOperation.getDateHeureOperation());
-    }
-
-    @Test
-    public void testCreditCompteBancaireAvecMontantNegatif() {
-        int montantACrediter = -500;
-
-        CreditException exception = Assertions.assertThrows(CreditException.class, () -> {
-            this.compteBancaire.credit(montantACrediter);
-        });
-
-        String expectedMessage = "Mauvais montant";
-        String actualMessage = exception.getMessage();
-
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testCreditCompteBancaireMontantMaxAtteint() throws CreditException {
-        int montantACrediter = 1000;
-        this.compteBancaire.credit(montantACrediter);
-
-        int montantACrediter2 = 500;
-        CompteRenduOperation compteRenduOperation = this.compteBancaire.credit(montantACrediter2);
-
-        int expectedNouveauSolde = 1000;
-        int expectedMontantCredite = 0;
-        int expectedMontantNonCredite = 500;
-
-        Assertions.assertEquals(expectedNouveauSolde, compteRenduOperation.getNouveauSolde());
-        Assertions.assertEquals(expectedMontantCredite, compteRenduOperation.getMontantCredite());
-        Assertions.assertEquals(expectedMontantNonCredite, compteRenduOperation.getMontantNonCredite());
+        Assert.assertEquals(banquier.getEmail(), "Dupont@email.com");
+        Assert.assertEquals(banquier.getNom(), "Dupont");
+        Assert.assertEquals(banquier.getPrenom(), "Jean");
+        Assert.assertEquals(banquier.getDateDeNaissance(), LocalDate.of(2001, 8, 1));
+        Assert.assertEquals(banquier.getDateArrivee(), this.dateArrivee);
+        Assert.assertEquals(banquier.getClients(), new ArrayList<Client>());
     }
 }

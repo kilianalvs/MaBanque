@@ -1,48 +1,162 @@
-package com.esgi.mabanque.MaBanque;
-
 import exception.CreditException;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.Test;
 
-
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
-import static org.junit.Assert.assertEquals;
+import java.time.LocalDateTime;
 
 public class CompteBancaireTest {
 
+    private CompteBancaire myCompte = new CompteBancaire();
+
     @Test
-    public void testCredit() throws CreditException {
-        CompteBancaire compteBancaire = mock(CompteBancaire.class);
-        doNothing().when(compteBancaire).save(anyInt());
+    public void testCompteBancaire() {
 
-        CompteRenduOperation compteRenduOperation = compteBancaire.credit(500);
+        CompteBancaire compte = this.myCompte;
+        Assert.assertEquals(compte.getMontant(), 0);
+        Assert.assertNull(compte.getDateHeureDerniereMAJ());
 
-        assertEquals(500, compteRenduOperation.getNouveauSolde());
-        assertEquals(500, compteRenduOperation.getMontantCredite());
-        assertEquals(0, compteRenduOperation.getMontantNonCredite());
+        compte.setId(1);
+        Assert.assertEquals(compte.getId(), 1);
 
-        verify(compteBancaire).save(500);
+        compte.setMontant(100);
+        Assert.assertEquals(compte.getMontant(), 100);
+
+        LocalDateTime dateHeureDerniereMAJ = LocalDateTime.now();
+        compte.setDateHeureDerniereMAJ(dateHeureDerniereMAJ);
+        Assert.assertEquals(compte.getDateHeureDerniereMAJ(), dateHeureDerniereMAJ);
     }
 
     @Test
-    public void testSave() {
-        CompteBancaire compteBancaire = mock(CompteBancaire.class);
-        doNothing().when(compteBancaire).save(anyInt());
+    public void testCompteEstValideAtMIN() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(0);
+        compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-
+        Assert.assertTrue(compte.estValide());
     }
+
     @Test
-    public void testDebit() throws CreditException {
-        CompteBancaire compteBancaire = mock(CompteBancaire.class);
-        doNothing().when(compteBancaire).save(anyInt());
+    public void testCompteEstValideAtMAX() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(1000);
+        compte.setDateHeureDerniereMAJ(LocalDateTime.now());
 
-        CompteRenduOperation compteRenduOperation = compteBancaire.debit(500);
-
-        assertEquals(0, compteRenduOperation.getNouveauSolde());
-        assertEquals(0, compteRenduOperation.getMontantDebite());
-        assertEquals(500, compteRenduOperation.getMontantNonDebite());
-
-        verify(compteBancaire).save(0);
+        Assert.assertTrue(compte.estValide());
     }
+
+    @Test
+    public void testCompteEstValideInRange() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(500);
+        compte.setDateHeureDerniereMAJ(LocalDateTime.now());
+
+        Assert.assertTrue(compte.estValide());
+    }
+
+    @Test
+    public void testCompteEstInvalideInfMIN() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(-1);
+        compte.setDateHeureDerniereMAJ(LocalDateTime.now());
+
+        Assert.assertFalse(compte.estValide());
+    }
+
+    @Test
+    public void testCompteEstInvalideSupMAX() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(1001);
+        compte.setDateHeureDerniereMAJ(LocalDateTime.now());
+
+        Assert.assertFalse(compte.estValide());
+    }
+
+    @Test
+    public void testCompteCredit() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(500);
+        try {
+            CompteRenduOperation compteRendu = compte.credit(100);
+            Assert.assertEquals(compteRendu.getMontantCredite(), 100);
+            Assert.assertEquals(compteRendu.getMontantDebite(), 0);
+            Assert.assertEquals(compteRendu.getNouveauSolde(), 600);
+        }catch (CreditException e) {
+            Assert.fail();
+        }
+
+    }
+
+    @Test
+    public void testCompteCreditInvalide() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(500);
+        try {
+            CompteRenduOperation compteRendu = compte.credit(0);
+
+            Assert.fail();
+        }catch (CreditException e) {
+            Assert.assertEquals(e.getMessage(), "Mauvais montant");
+        }
+
+    }
+
+    @Test
+    public void testCompteCreditInvalideCompte() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(-1);
+        try {
+            CompteRenduOperation compteRendu = compte.credit(500);
+
+            Assert.fail();
+        }catch (CreditException e) {
+            Assert.assertEquals(e.getMessage(), "Le compte bancaire n'est pas dans un état correct");
+        }
+
+    }
+
+    @Test
+    public void testCompteDebit() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(500);
+        try {
+            CompteRenduOperation compteRendu = compte.debit(100);
+            Assert.assertEquals(compteRendu.getMontantCredite(), 0);
+            Assert.assertEquals(compteRendu.getMontantDebite(), 100);
+            Assert.assertEquals(compteRendu.getNouveauSolde(), 400);
+        }catch (CreditException e) {
+            Assert.fail();
+        }
+
+    }
+
+    @Test
+    public void testCompteDebitInvalide() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(500);
+        try {
+            CompteRenduOperation compteRendu = compte.debit(0);
+
+            Assert.fail();
+        }catch (CreditException e) {
+            Assert.assertEquals(e.getMessage(), "Mauvais montant");
+        }
+
+    }
+
+    @Test
+    public void testCompteDebitInvalideCompte() {
+        CompteBancaire compte = this.myCompte;
+        compte.setMontant(-1);
+        try {
+            CompteRenduOperation compteRendu = compte.debit(500);
+
+            Assert.fail();
+        }catch (CreditException e) {
+            Assert.assertEquals(e.getMessage(), "Le compte bancaire n'est pas dans un état correct");
+        }
+
+    }
+
+
 
 }
