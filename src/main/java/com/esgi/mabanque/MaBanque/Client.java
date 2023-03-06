@@ -1,6 +1,6 @@
 package com.esgi.mabanque.MaBanque;
 
-import exception.GlobalException;
+import com.esgi.mabanque.MaBanque.exception.GlobalException;
 
 import java.time.LocalDate;
 import java.util.List;
