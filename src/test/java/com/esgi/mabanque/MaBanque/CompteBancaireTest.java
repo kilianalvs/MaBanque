@@ -89,7 +89,7 @@ public class CompteBancaireTest {
     public void testCompteCreditInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
-        
+
         assertThrows(CreditException.class, ()-> compte.credit(0));
 
     }
