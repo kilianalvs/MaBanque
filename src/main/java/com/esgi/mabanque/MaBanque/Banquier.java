@@ -1,14 +1,10 @@
 package com.esgi.mabanque.MaBanque;
 
-import com.esgi.mabanque.MaBanque.exception.GlobalException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Banquier extends User {
-    public static int DELAI_AVANT_BANQUIER_CONTACTE_CLIENT = 90;
 
     private LocalDate dateArrivee;
     private List<Client> clients;
@@ -22,25 +18,6 @@ public class Banquier extends User {
         super(email, prenom, nom, dateDeNaissance);
         this.dateArrivee = dateArrivee;
         this.clients = clients;
-    }
-
-    public List<Client> clientsAContacter() throws GlobalException {
-        if (LocalDate.now().minusDays(DELAI_AVANT_BANQUIER_CONTACTE_CLIENT).isBefore(this.dateArrivee)) {
-            throw new GlobalException("Veuillez valider votre période d'essai avant de contacter des clients");
-        }
-
-        List<Client> clientAContacter = new ArrayList<>(this.clients.size());
-
-        for (Client client: this.clients) {
-            for (CompteBancaire compteBancaire: client.getCompteBancaire()) {
-                if (!compteBancaire.estValide()) {
-                    clientAContacter.add(client);
-                    break;
-                }
-            }
-        }
-
-        return clientAContacter;
     }
 
     /***********************/

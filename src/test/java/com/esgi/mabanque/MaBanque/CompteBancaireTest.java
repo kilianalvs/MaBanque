@@ -11,8 +11,17 @@ public class CompteBancaireTest {
 
     private CompteBancaire myCompte = new CompteBancaire();
 
+
+    private CompteBancaire getMockCompteBancaire(){
+        CompteBancaire compteBancaire = new CompteBancaire();
+        compteBancaire.setMontant(500);
+        compteBancaire.setId(123);
+        compteBancaire.setDateHeureDerniereMAJ(LocalDateTime.now());
+        return compteBancaire;
+    }
+
     @Test
-    public void testCompteBancaire() {
+    void testCompteBancaire() {
 
         CompteBancaire compte = this.myCompte;
         assertEquals(compte.getMontant(), 0);
@@ -30,7 +39,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteEstValideAtMIN() {
+    void testCompteEstValideAtMIN() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(0);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
@@ -39,7 +48,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteEstValideAtMAX() {
+    void testCompteEstValideAtMAX() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(1000);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
@@ -48,7 +57,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteEstValideInRange() {
+    void testCompteEstValideInRange() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
@@ -57,7 +66,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteEstInvalideInfMIN() {
+    void testCompteEstInvalideInfMIN() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
@@ -66,7 +75,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteEstInvalideSupMAX() {
+    void testCompteEstInvalideSupMAX() {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(1001);
         compte.setDateHeureDerniereMAJ(LocalDateTime.now());
@@ -75,7 +84,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCredit() throws CreditException {
+    void testCompteCredit() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.credit(100);
@@ -86,7 +95,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCreditInvalide() throws CreditException {
+    void testCompteCreditInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
 
@@ -95,7 +104,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteCreditInvalideCompte() throws CreditException {
+    void testCompteCreditInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
 
@@ -104,7 +113,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebit() throws CreditException {
+    void testCompteDebit() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
         CompteRenduOperation compteRendu = compte.debit(100);
@@ -115,7 +124,7 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebitInvalide() throws CreditException {
+    void testCompteDebitInvalide() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(500);
 
@@ -124,13 +133,22 @@ public class CompteBancaireTest {
     }
 
     @Test
-    public void testCompteDebitInvalideCompte() throws CreditException {
+    void testCompteDebitInvalideCompte() throws CreditException {
         CompteBancaire compte = this.myCompte;
         compte.setMontant(-1);
 
         assertThrows(CreditException.class, ()-> compte.debit(500));
 
     }
+
+    @Test
+    void debit_compte_with_solde_1000_should_return_exception() throws CreditException {
+        CompteBancaire compteBancaire = getMockCompteBancaire();
+        compteBancaire.setMontant(1000);
+        compteBancaire.credit(100);
+        assertEquals(1000, compteBancaire.getMontant());
+    }
+
 
 
 
